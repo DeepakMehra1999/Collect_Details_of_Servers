@@ -18,7 +18,7 @@ email_body=$(echo "$master_sheet_details" | awk -F '\t' '{printf "%-15s%-25s%-15
 message_body1="Hi All,\nDaily Health check is done for $master_sheet_records_count server(s) ,Please find the results below. \n"
 message_body2="Condition of Breach :-"
 message_body3="\tServices: Actual number of services not matching the expected number of services.\n\tDisk Space: Disk Space in the respective directory exceeds 80%.\n\tFree Memory: Free Memory in the respective directory goes below to 20% of Total Memory.\n"
-message_body4="Thank you,\nLumin Ops Support"
+message_body4="Thank you,\n"
 
 # Send the email using the mutt command
 # Set the subject of the email
