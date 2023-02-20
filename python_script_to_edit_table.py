@@ -17,7 +17,7 @@ master_sheet = "{}.csv".format(master_sheet_file_name)
 
 #Changing the current working directory to a specific folder
 #os.chdir('/home/sa-jan-mvp/overall-monitoring-report')
-os.chdir('/home/sa-jan-mvp/Testing')
+os.chdir('/directory_path_of_where_CSV_files_and_Scripts_are_Present')
 #present working directory
 pwd=os.getcwd()
 
