@@ -6,10 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from prettytable import PrettyTable
 import subprocess
-import socket
 
-#Getting the hostname of the system
-hostname = socket.gethostname()
 
 master_sheet_file_name="master_sheet"
 #Creating a filename for the csv file using the hostname
@@ -17,22 +14,21 @@ master_sheet = "{}.csv".format(master_sheet_file_name)
 
 #Changing the current working directory to a specific folder
 #os.chdir('/home/sa-jan-mvp/overall-monitoring-report')
-os.chdir('/directory_path_of_where_CSV_files_and_Scripts_are_Present')
+os.chdir('/home/sa-jan-mvp/mailenhancement')
 #present working directory
 pwd=os.getcwd()
 
+
+header = "Account\tHostname\tDisk_Space\tTotal_Memory\tFree_Memory\tFree_Memory_Status\tService\tUptime\tComments\n"
 with open(master_sheet, "w") as outfile:
-    header_written = False
+    outfile.write(header)
     for filename in os.listdir():
         if filename.endswith(".csv"):
             with open(filename, "r") as infile:
-                for line in infile:
-                    if not header_written:
+                first_row = next(infile, None)  # get the first row, or None if file is empty
+                if first_row is not None:
+                    for line in infile:
                         outfile.write(line)
-                        header_written = True
-                    else:
-                        outfile.write(line)
-
 
 
 #Initializing a table header using the 'prettytable' module
@@ -48,7 +44,11 @@ with open(master_sheet, "r") as file:
         values = line.strip().split("\t")
         table_header.add_row(values)
 
-print(table_header)
+#print(table_header)
+my_message2="Condition of Breach:-"
+my_message3="Services: Actual number of services not matching the expected number of services."
+my_message4="Disk Space: Disk Space in the respective directory exceeds 80%."
+my_message5="Free Memory: Free Memory in the respective directory goes below to 20% of Total Memory."
 
 try:
     my_message1 = table_header.get_html_string()
@@ -104,8 +104,12 @@ try:
     #table_string = part2.as_string()
     table_string = part2.as_string().split('\n\n', 1)[1]
     #Running a shell script to send an email
-    with open("output.html", "w") as f:
+    with open("Infra_Output.html", "w") as f:
         f.write(table_string)
+        f.write("<br>" + my_message2)
+        f.write("<br>&nbsp;&nbsp;&nbsp;&nbsp;" + my_message3)
+        f.write("<br>&nbsp;&nbsp;&nbsp;&nbsp;" + my_message4)
+        f.write("<br>&nbsp;&nbsp;&nbsp;&nbsp;" + my_message5)
 
     os.chdir(pwd)
     bash_script_path = "./mailing.sh"
